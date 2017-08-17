@@ -7,11 +7,6 @@
 ##### 1.1 添加子控制器
 
 ```objective-c
-- (void)displayContentController:(UIViewController *)content {
-   [self addChildViewController:content];
-  //注意，容器控制器的 addChildViewController: 方法会调用子控制器的 willMoveToParentViewController: 方法，因此不需要写子控制器的 willMoveToParentViewController: 方法。
-   content.view.frame = [self frameForContentController];
-   [self.view addSubview:self.currentClientView];
-   [content didMoveToParentViewController:self];
-}
+    TTPageScrollViewController *pageVC = [[TTPageScrollViewController alloc] init];
+    pageVC.viewControllers = @[[FirstViewController new],[SecondViewController new],[ThirdViewController new]];
 ```
