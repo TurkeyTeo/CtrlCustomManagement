@@ -27,7 +27,6 @@
     self.window.rootViewController = nav;
 
     pageVC.viewControllers = @[[FirstViewController new],[SecondViewController new],[ThirdViewController new]];
-    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
