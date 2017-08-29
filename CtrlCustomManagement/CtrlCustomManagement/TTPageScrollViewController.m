@@ -15,6 +15,7 @@
 @property (nonatomic, strong) TTHeadScroll *headScroll;     //头部视图
 @property (nonatomic, strong) UIScrollView *contentView;                        //滑动视图
 @property (nonatomic, assign) NSInteger headHeight;       //头部视图高度
+@property (nonatomic, assign) BOOL isTitleBarShow;          //是否显示标题栏
 
 @end
 
@@ -34,9 +35,14 @@
     
     _viewControllers = viewControllers;
     
-    self.headHeight = 40;
-    [self displayViewControllers];
-    [self displayHeadScroll];
+    if (self.isTitleBarShow) {
+//        self.headHeight = 40;
+        [self displayViewControllers];
+        [self displayHeadScroll];
+    }else{
+//        self.headHeight = 0;
+        [self displayViewControllers];
+    }
     
 }
 
@@ -50,6 +56,14 @@
         [self.view addSubview:_contentView];
     }
     return _contentView;
+}
+
+- (void)setIsTitleBarShow:(BOOL)isTitleBarShow{
+    _isTitleBarShow = isTitleBarShow;
+    if (_isTitleBarShow) {
+        self.headHeight = 40;
+    }else
+        self.headHeight = 0;
 }
 
 
@@ -70,7 +84,13 @@
     self.selectedIndex = 0;
 }
 
+//添加头部视图
 - (void)displayHeadScroll{
+    
+    if (self.headScroll) {
+        return;
+    }
+    
     NSInteger i = 0;
     NSMutableArray *btnArray = [NSMutableArray arrayWithCapacity:_viewControllers.count];
     for (UIViewController *vc in _viewControllers) {
@@ -90,11 +110,17 @@
         [btnArray addObject:button];
         i++;
     }
-    
     self.headScroll = [[TTHeadScroll alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.headHeight) buttonArray:btnArray];
     [self.view addSubview:self.headScroll];
 }
 
+//移除头部视图
+- (void)removeHeadScroll{
+    if (self.headScroll) {
+        [self.headScroll removeFromSuperview];
+        self.headScroll = nil;
+    }
+}
 
 
 - (CGRect)calculateContentFrame:(NSInteger)index{
@@ -104,11 +130,29 @@
 
 #pragma mark -- life cyc
 
+- (instancetype)init{
+    if ([super init]) {
+        self.isTitleBarShow = NO;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
+- (void)viewWillLayoutSubviews{
+
+    self.contentView.frame = CGRectMake(0, self.headHeight, self.view.bounds.size.width, self.view.bounds.size.height - self.headHeight);
+    NSUInteger i = 0;
+    for (UIViewController *vc in _viewControllers) {
+        vc.view.frame = [self calculateContentFrame:i++];
+    }
+    self.contentView.contentSize = CGSizeMake(self.view.bounds.size.width * i, self.contentView.bounds.size.height);
+
 }
 
 
@@ -126,8 +170,40 @@
     self.selectedIndex = index;
     
     [self.headScroll updateTipView:self.selectedIndex];
-    [self.contentView setContentOffset:CGPointMake(self.selectedIndex * self.contentView.frame.size.width, self.contentView.frame.origin.y) animated:NO];
+    [self.contentView scrollRectToVisible:CGRectMake(self.selectedIndex * self.contentView.frame.size.width, self.contentView.frame.origin.y, self.contentView.frame.size.width, self.contentView.frame.size.height) animated:NO];
 }
+
+#pragma mark -- public
+/**
+ 初始化
+ 
+ @param viewControllers viewControllers数据源
+ @param show 是否显示标题栏
+ */
+- (instancetype)initWithViewControllers:(NSArray <UIViewController *> *)viewControllers isTitleViewShouldShow:(BOOL)show{
+    
+    if (self = [super init]) {
+        self.isTitleBarShow = show;
+        self.viewControllers = viewControllers;
+    }
+    return self;
+}
+
+
+//是否隐藏顶部标题栏
+- (void)isTitleViewShouldShow:(BOOL)show{
+    
+    self.isTitleBarShow = show;
+    if (show) {
+//        显示
+        [self displayHeadScroll];
+    }else{
+//        隐藏
+        [self removeHeadScroll];
+    }
+    
+}
+
 
 
 #pragma mark -- delegate

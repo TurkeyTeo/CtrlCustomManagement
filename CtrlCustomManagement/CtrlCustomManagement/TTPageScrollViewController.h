@@ -11,6 +11,16 @@
 @interface TTPageScrollViewController : UIViewController
 
 @property (nonatomic, strong) NSArray <UIViewController *> *viewControllers;    //装载viewController的集合
-@property (nonatomic, assign) BOOL isTitleBarShow;          //是否显示标题栏
+
+- (void)isTitleViewShouldShow:(BOOL)show;           //是否隐藏顶部标题栏； 默认不显示
+
+
+/**
+ 初始化
+
+ @param viewControllers viewControllers数据源
+ @param show 是否显示标题栏
+ */
+- (instancetype)initWithViewControllers:(NSArray <UIViewController *> *)viewControllers isTitleViewShouldShow:(BOOL)show;
 
 @end

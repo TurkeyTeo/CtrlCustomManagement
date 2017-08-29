@@ -21,12 +21,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    TTPageScrollViewController *pageVC = [[TTPageScrollViewController alloc] init];
+    TTPageScrollViewController *pageVC = [[TTPageScrollViewController alloc] initWithViewControllers:@[[FirstViewController new],[SecondViewController new],[ThirdViewController new]] isTitleViewShouldShow:NO];
     pageVC.title = @"TTPage";
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:pageVC];
     self.window.rootViewController = nav;
 
-    pageVC.viewControllers = @[[FirstViewController new],[SecondViewController new],[ThirdViewController new]];
+//initWithViewControllers:isTitleViewShouldShow等价于
+//    pageVC.viewControllers = @[[FirstViewController new],[SecondViewController new],[ThirdViewController new]];
+//    [pageVC isTitleViewShouldShow:YES];
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
