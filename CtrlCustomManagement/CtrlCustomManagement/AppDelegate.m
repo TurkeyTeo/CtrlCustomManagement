@@ -21,7 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    TTPageScrollViewController *pageVC = [[TTPageScrollViewController alloc] initWithViewControllers:@[[FirstViewController new],[SecondViewController new],[ThirdViewController new]] isTitleViewShouldShow:NO];
+    TTPageScrollViewController *pageVC = [[TTPageScrollViewController alloc] initWithViewControllers:@[[FirstViewController new],[SecondViewController new],[ThirdViewController new]].mutableCopy isTitleViewShouldShow:YES];
     pageVC.title = @"TTPage";
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:pageVC];
     self.window.rootViewController = nav;

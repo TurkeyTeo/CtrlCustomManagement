@@ -8,6 +8,7 @@
 
 #import "TTPageScrollViewController.h"
 #import "TTHeadScroll.h"
+#import "FirstViewController.h"
 
 @interface TTPageScrollViewController ()<UIScrollViewDelegate>
 
@@ -23,7 +24,7 @@
 
 #pragma mark -- property
 
-- (void)setViewControllers:(NSArray<UIViewController *> *)viewControllers{
+- (void)setViewControllers:(NSMutableArray<UIViewController *> *)viewControllers{
     //必须含有元素 && viewControllers中元素必须为viewController
     if (!viewControllers.count) {
         return;
@@ -142,6 +143,7 @@
     // Do any additional setup after loading the view.
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addVC)];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -173,6 +175,15 @@
     [self.contentView scrollRectToVisible:CGRectMake(self.selectedIndex * self.contentView.frame.size.width, self.contentView.frame.origin.y, self.contentView.frame.size.width, self.contentView.frame.size.height) animated:NO];
 }
 
+- (void)addVC{
+    
+//    NSMutableArray *temp = self.viewControllers;
+//    [temp addObject:[FirstViewController new]];
+//    self.viewControllers = temp;
+//    [self isTitleViewShouldShow:self.isTitleBarShow];
+}
+
+
 #pragma mark -- public
 /**
  初始化
@@ -180,7 +191,7 @@
  @param viewControllers viewControllers数据源
  @param show 是否显示标题栏
  */
-- (instancetype)initWithViewControllers:(NSArray <UIViewController *> *)viewControllers isTitleViewShouldShow:(BOOL)show{
+- (instancetype)initWithViewControllers:(NSMutableArray <UIViewController *> *)viewControllers isTitleViewShouldShow:(BOOL)show{
     
     if (self = [super init]) {
         self.isTitleBarShow = show;
